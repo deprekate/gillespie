@@ -75,7 +75,8 @@ def iteration(reactions, molecules, substrate, product, dna):
 		#print(k, s, dna, where_on_genome(i) )
 		dna[i+1] = dna[i]
 		temp = dna.pop(i)
-		molecules[temp + "*" + where_on_genome(i)] += 1;
+		molecules[temp + "*" + where_on_genome(i)] -= 1;
+		molecules[temp + "*" + where_on_genome(i+1)] += 1;
 
 			
 	return tau
@@ -86,9 +87,7 @@ def get_random_pol(r, dna):
 	where = r[i:]
 	keys = list(dna.keys())
 	random.shuffle(keys)
-	print("what where",what,where, dna)
 	for k in keys:
-		print(where_on_genome(k))
 		if(where_on_genome(k) == where and dna[k] == what):
 			return k
 	return
