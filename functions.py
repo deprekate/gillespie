@@ -60,6 +60,7 @@ def iteration(reactions, molecules, substrate, product, dna):
 	# cumulative sum of the probabilities
 	cumsum = [sum(tot[:i+1])/sum(tot) for i in range(len(tot))] 
 	rand = random.random()
+	# here is where you get the reaction that occurs
 	for i, k in enumerate(reactions):
 		if(rand < cumsum[i]):
 			break
@@ -69,25 +70,32 @@ def iteration(reactions, molecules, substrate, product, dna):
 		molecules[s] -= 1;
 	for p in product[k]:
 		molecules[p] += 1;
+
 	# adjust the genetic
 	if(substrate[k] == product[k]):
 		s = substrate[k][0]
-		#print(k, s, dna)
+		print(k, s, dna)
 		j = get_random_pol(s, dna)
-		#print(i)
 		dna[j+1] = dna[j]
 		temp = dna.pop(j)
-		molecules[temp + "*" + where_on_genome(j)] -= 1;
-		molecules[temp + "*" + where_on_genome(j+1)] += 1;
+		if(where_on_genome(j+1) == 'RNA_r'):
+			molecules[temp + "*" + where_on_genome(j)] -= 1;
+			molecules[where_on_genome(j+1)] += 1;
+		else:
+			molecules[temp + "*" + where_on_genome(j)] -= 1;
+			molecules[temp + "*" + where_on_genome(j+1)] += 1;
 	elif any("DNA" in s for s in substrate[k]+product[k]):
-		print(substrate[k])
-		print(get_random_pol(substrate[k][0], dna) )
+		print(substrate[k],"->",product[k])
+		j = get_random_pol(substrate[k][0], dna)
+		p = product[k][0]
+		i = p.find('DNA')
+		dna[j] = p[:i-1]
 
 			
 	return tau
 
 def get_random_pol(r, dna):
-	# get a random polymerase in the region r
+	# get a random polymerase/N in the region r
 	i = r.find('DNA')
 	what = r[:i-1]
 	where = r[i:]
