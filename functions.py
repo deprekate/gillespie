@@ -10,6 +10,8 @@ def product(list):
 def same(items):
 	return len(set(items)) == 1 #faster all(x == items[0] for x in items)
 def where_on_genome(position):
+	if(not position):
+		raise ValueError('A very specific bad thing happened.')
 	#these are for Pl
 	if(position <= 34000):
 		return "RNA_l"
@@ -46,7 +48,7 @@ def iteration(reactions, molecules, substrate, product, dna):
 	for i, k in enumerate(reactions):
 		r = reactions[k]
 		if(len(substrate[k]) > 1 and len(set(substrate)) == 1):
-			#special case for reactions that use two of same omething
+			#special case for reactions that use two of same thing
 			s = substrate[k][0]
 			tot[i] *= molecules[s] * (molecules[s]-1)
 		else:
@@ -70,21 +72,26 @@ def iteration(reactions, molecules, substrate, product, dna):
 	# adjust the genetic
 	if(substrate[k] == product[k]):
 		s = substrate[k][0]
-		i = get_random_pol(s, dna)
+		#print(k, s, dna)
+		j = get_random_pol(s, dna)
 		#print(i)
-		#print(k, s, dna, where_on_genome(i) )
-		dna[i+1] = dna[i]
-		temp = dna.pop(i)
-		molecules[temp + "*" + where_on_genome(i)] -= 1;
-		molecules[temp + "*" + where_on_genome(i+1)] += 1;
+		dna[j+1] = dna[j]
+		temp = dna.pop(j)
+		molecules[temp + "*" + where_on_genome(j)] -= 1;
+		molecules[temp + "*" + where_on_genome(j+1)] += 1;
+	elif any("DNA" in s for s in substrate[k]+product[k]):
+		print(substrate[k])
+		print(get_random_pol(substrate[k][0], dna) )
 
 			
 	return tau
 
 def get_random_pol(r, dna):
+	# get a random polymerase in the region r
 	i = r.find('DNA')
 	what = r[:i-1]
 	where = r[i:]
+	#print("what where", what, where, dna)
 	keys = list(dna.keys())
 	random.shuffle(keys)
 	for k in keys:

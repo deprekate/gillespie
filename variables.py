@@ -6,7 +6,7 @@ molecules = {
 	"cII"  : 0,
 	"cro"  : 0,
 	"cro2"  : 0,
-	"N"     : 0,
+	"N"     : 1000,
 	"cIII"  : 0,
 	"P1"    : 0,
 	"P1*cII" : 0,

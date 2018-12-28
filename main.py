@@ -27,7 +27,7 @@ tfinal = 1000
 while(t < tfinal):
 	tau = iteration(reactions1, molecules, reactions_sub, reactions_pro, dna)
 	t += tau
-	show(molecules)
+	#show(molecules)
 	if(tau < 1e-10):
 		break
 
